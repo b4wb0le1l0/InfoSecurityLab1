@@ -55,12 +55,12 @@
    source venv/bin/activate
    ```
 
-2. Устаноdrf зависимостей:
+2. Установка зависимостей:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Разворачивание docker контейнера с Postgres:
+3. Развертывание docker контейнера с Postgres:
    ```bash
    docker-compose up -d
    ```
