@@ -67,7 +67,7 @@
 
 4. Запуск:
    ```bash
-   python app.py
+   python main.py
    ```
 
 API доступен по адресу `http://localhost:5000`.

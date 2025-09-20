@@ -1,4 +1,4 @@
-#!/Users/e.aganin/study/InfoSecurity/lab1/mylab/venv/bin/python3
+#!/Users/e.aganin/study/InfoSecurity/lab1/mylab/venv/bin/python
 import sys
 from bandit.cli.baseline import main
 if __name__ == '__main__':

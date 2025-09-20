@@ -1,4 +1,4 @@
-#!/Users/e.aganin/study/InfoSecurity/lab1/mylab/venv/bin/python3
+#!/Users/e.aganin/study/InfoSecurity/lab1/mylab/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
