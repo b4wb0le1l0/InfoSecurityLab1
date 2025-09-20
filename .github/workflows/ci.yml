@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-test-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Start PostgreSQL with Docker Compose
+        run: |
+          docker-compose up -d postgres
+          sleep 10
+
+      - name: Export env for Flask (DB & JWT)
+        run: |
+          echo "SECRET_KEY=dev-secret-key-change-in-production" >> $GITHUB_ENV
+          echo "JWT_SECRET_KEY=jwt-secret-string-change-in-production" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql://lab:lab@localhost:5432/lab1" >> $GITHUB_ENV
+
+      - name: Run security scans (Bandit)
+        run: |
+          bandit -r app/ -f json -o bandit-report.json || true
+          bandit -r app/ -f html -o bandit-report.html || true
+
+      - name: Run security scans (Safety)
+        run: |
+          safety check --full-report > safety-report.txt || true
+
+      - name: Run tests
+        run: |
+          python -m unittest discover tests
+
+      - name: Upload Bandit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-reports
+          path: |
+            bandit-report.html
+            bandit-report.json
+          if-no-files-found: warn
+
+      - name: Upload Safety reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-reports
+          path: safety-report.txt
+          if-no-files-found: warn
