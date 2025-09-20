@@ -1,14 +1,6 @@
 # Безопасное REST API с интеграцией CI/CD
 
-Это реализация безопасного REST API на Python с интегрированным CI/CD пайплайном для сканирования безопасности. Проект демонстрирует лучшие практики защиты веб-приложений от распространенных уязвимостей, перечисленных в OWASP Top 10.
-
-## Запуск
-```bash
-docker-compose up -d
-```
-```bash
-source venv/bin/activate
-```
+Реализация безопасного REST API на Python с интегрированным CI/CD пайплайном для сканирования безопасности.
 
 ## Возможности
 
@@ -18,42 +10,6 @@ source venv/bin/activate
 - Защита от межсайтового скриптинга (XSS)
 - Безопасное хранение паролей с хешированием
 - CI/CD пайплайн с автоматизированным сканированием безопасности
-
-## Используемые технологии
-
-- Python 3.x
-- Веб-фреймворк Flask
-- ORM SQLAlchemy для работы с базой данных
-- Flask-JWT-Extended для управления JWT токенами
-- Marshmallow для валидации данных
-- Bleach для защиты от XSS
-- Bandit для SAST сканирования безопасности
-- Safety для SCA проверки зависимостей
-- GitHub Actions для CI/CD
-
-## Структура проекта
-
-```
-lab1/
-├── app.py                 # Главная точка входа приложения
-├── requirements.txt       # Зависимости проекта
-├── app/
-│   ├── config.py          # Конфигурация приложения
-│   ├── database.py        # Инициализация базы данных
-│   ├── api/               # Обработчики API endpoint'ов
-│   │   ├── auth.py        # Endpoint'ы аутентификации
-│   │   └── data.py        # Endpoint'ы управления данными
-│   ├── models/            # Модели базы данных
-│   │   ├── user.py        # Модель пользователя
-│   │   └── task.py        # Модель задачи
-│   ├── schemas/           # Схемы валидации данных
-│   │   ├── auth.py        # Схемы данных аутентификации
-│   │   └── task.py        # Схемы данных задач
-│   ├── core/              # Бизнес-логика
-│   └── utils/             # Вспомогательные функции
-└── .github/workflows/     # Конфигурация CI/CD пайплайна
-    └── ci.yml             # Workflow сканирования безопасности
-```
 
 ## Реализованные меры безопасности
 
@@ -93,33 +49,30 @@ lab1/
 
 ## Установка и настройка
 
-1. Клонируйте репозиторий:
-   ```bash
-   git clone <url-репозитория>
-   cd lab1/lab1
-   ```
-
-2. Создайте виртуальное окружение:
+1. Создание виртуального окружения:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # В Windows: venv\Scripts\activate
+   source venv/bin/activate
    ```
 
-3. Установите зависимости:
+2. Устаноdrf зависимостей:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Запустите приложение:
+3. Разворачивание docker контейнера с Postgres:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Запуск:
    ```bash
    python app.py
    ```
 
-API будет доступен по адресу `http://localhost:5000`.
+API доступен по адресу `http://localhost:5000`.
 
 ## CI/CD Пайплайн
-
-Проект включает GitHub Actions workflow, который запускается при каждом push и pull request:
 
 1. **SAST (Статический анализ безопасности приложений)**:
    - Bandit сканирует код на наличие распространенных проблем безопасности
@@ -133,27 +86,77 @@ API будет доступен по адресу `http://localhost:5000`.
 
 ## Тестирование API
 
-Вы можете протестировать API с помощью curl или инструмента типа Postman:
+Можно епротестировать API с помощью curl или инструмента типа Postman:
 
-1. Регистрация нового пользователя:
-   ```bash
-   curl -X POST http://localhost:5000/auth/sign-up \
-        -H "Content-Type: application/json" \
-        -d '{"username": "testuser", "password": "securepassword"}'
-   ```
+1. Регистрация нового пользователя
 
-2. Вход для получения токена:
-   ```bash
-   curl -X POST http://localhost:5000/auth/sign-in \
-        -H "Content-Type: application/json" \
-        -d '{"username": "testuser", "password": "securepassword"}'
-   ```
+```bash
+curl -X POST http://localhost:5000/auth/sign-up \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "password": "testpassword"
+  }'
+```
 
-3. Использование токена для доступа к защищенным endpoint'ам:
-   ```bash
-   curl -X GET http://localhost:5000/api/data/ \
-        -H "Authorization: Bearer <ваш-токен-здесь>"
-   ```
+2. Аутентификация пользователя
+
+```bash
+curl -X POST http://localhost:5000/auth/sign-in \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "password": "testpassword"
+  }'
+```
+
+После успешной аутентификации мы получаем токен доступа, который используем в последующих запросах.
+
+3. Создание новой задачи
+
+```bash
+curl -X POST http://localhost:5000/api/data/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{
+    "title": "Тестовая задача",
+    "description": "Описание тестовой задачи"
+  }'
+```
+
+4. Get всех задач
+
+```bash
+curl -X GET http://localhost:5000/api/data/ \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+5. Get задачи по ID
+
+```bash
+curl -X GET http://localhost:5000/api/data/1 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+6. Update существующей задачи
+
+```bash
+curl -X PUT http://localhost:5000/api/data/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{
+    "title": "Обновленная задача",
+    "description": "Обновленное описание задачи"
+  }'
+```
+
+7. Удаление задачки
+
+```bash
+curl -X DELETE http://localhost:5000/api/data/1 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
 
 ## Отчеты о безопасности
 
