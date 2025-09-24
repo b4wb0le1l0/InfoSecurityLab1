@@ -30,6 +30,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+      - name: Install Snyk CLI
+        run: |
+          npm install -g snyk
+
       - name: Start PostgreSQL with Docker Compose
         run: |
           docker-compose up -d postgres
@@ -46,9 +50,9 @@ jobs:
           bandit -r app/ -f json -o bandit-report.json || true
           bandit -r app/ -f html -o bandit-report.html || true
 
-      - name: Run security scans (Safety)
+      - name: Run security scans (Snyk)
         run: |
-          safety check --full-report > safety-report.txt || true
+          npx snyk test --json-file-output=snyk-report.json || true
 
       - name: Run tests
         run: |
@@ -63,9 +67,9 @@ jobs:
             bandit-report.json
           if-no-files-found: warn
 
-      - name: Upload Safety reports
+      - name: Upload Snyk reports
         uses: actions/upload-artifact@v4
         with:
-          name: safety-reports
-          path: safety-report.txt
+          name: snyk-reports
+          path: snyk-report.json
           if-no-files-found: warn

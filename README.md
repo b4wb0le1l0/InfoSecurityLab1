@@ -60,6 +60,12 @@
    pip install -r requirements.txt
    ```
 
+3. Установка и аутентификация skyn
+  ```bash
+  npm install -g snyk
+  snyk auth
+  ```
+
 3. Развертывание docker контейнера с Postgres:
    ```bash
    docker-compose up -d
