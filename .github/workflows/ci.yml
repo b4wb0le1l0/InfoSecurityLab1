@@ -50,9 +50,12 @@ jobs:
           bandit -r app/ -f json -o bandit-report.json || true
           bandit -r app/ -f html -o bandit-report.html || true
 
-      - name: Run security scans (Snyk)
+      - name: Run Snyk scan (Python)
         run: |
-          npx snyk test --json-file-output=snyk-report.json || true
+          snyk --version
+          npx snyk test --file=requirements.txt --json-file-output=snyk-report.json || true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run tests
         run: |
