@@ -54,6 +54,7 @@ jobs:
         run: |
           snyk --version
           npx snyk test --file=requirements.txt --json-file-output=snyk-report.json --org=b4wb0le1l0 || true
+          snyk code test --json-file-output=snyk-code-report.json --org=b4wb0le1l0 || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
