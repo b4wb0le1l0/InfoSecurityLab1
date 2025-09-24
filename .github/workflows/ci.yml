@@ -53,10 +53,11 @@ jobs:
 
       - name: Run OWASP Dependency-Check
         run: |
+          mkdir -p reports
           ./dependency-check/bin/dependency-check.sh \
             --project "mylab" \
             --noupdate \
-            --scan . \
+            --scan app/ \
             --format "ALL" \
             --out reports
 
