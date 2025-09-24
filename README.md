@@ -60,10 +60,10 @@
    pip install -r requirements.txt
    ```
 
-3. Установка и аутентификация skyn
+3. Установка OWASP Dependency-Check:
   ```bash
-  npm install -g snyk
-  snyk auth
+  wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
+  sunzip dependency-check-8.3.1-release.zip -d dependency-check
   ```
 
 3. Развертывание docker контейнера с Postgres:

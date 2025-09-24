@@ -25,14 +25,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Install OWASP Dependency-Check
+        run: |
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.3.1/dependency-check-8.3.1-release.zip
+          unzip dependency-check-8.3.1-release.zip -d dependency-check
+
       - name: Install Docker Compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
-
-      - name: Install Snyk CLI
-        run: |
-          npm install -g snyk
 
       - name: Start PostgreSQL with Docker Compose
         run: |
@@ -50,13 +51,14 @@ jobs:
           bandit -r app/ -f json -o bandit-report.json || true
           bandit -r app/ -f html -o bandit-report.html || true
 
-      - name: Run Snyk scan (Python)
+      - name: Run OWASP Dependency-Check
         run: |
-          snyk --version
-          npx snyk test --file=requirements.txt --json-file-output=snyk-report.json --org=b4wb0le1l0 || true
-          snyk code test --json-file-output=snyk-code-report.json --org=b4wb0le1l0 || true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          ./dependency-check/bin/dependency-check.sh \
+            --project "mylab" \
+            --noupdate \
+            --scan . \
+            --format "ALL" \
+            --out reports
 
       - name: Run tests
         run: |
@@ -71,9 +73,10 @@ jobs:
             bandit-report.json
           if-no-files-found: warn
 
-      - name: Upload Snyk reports
+      - name: Upload Dependency-Check reports
         uses: actions/upload-artifact@v4
         with:
-          name: snyk-reports
-          path: snyk-report.json
-          if-no-files-found: warn
+          name: dependency-check-reports
+          path: |
+            OWASP-report.html
+            OWASP-report.json
