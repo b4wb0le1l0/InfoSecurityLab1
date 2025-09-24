@@ -53,7 +53,7 @@ jobs:
       - name: Run Snyk scan (Python)
         run: |
           snyk --version
-          npx snyk test --file=requirements.txt --json-file-output=snyk-report.json || true
+          npx snyk test --file=requirements.txt --json-file-output=snyk-report.json --org=b4wb0le1l0 || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
