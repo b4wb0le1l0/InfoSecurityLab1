@@ -51,14 +51,6 @@ jobs:
           bandit -r app/ -f json -o bandit-report.json || true
           bandit -r app/ -f html -o bandit-report.html || true
 
-      - name: Cache Dependency-Check DB
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/dependency-check
-          key: dep-check-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            dep-check-${{ runner.os }}-
-
       - name: Run OWASP Dependency-Check
         run: |
           mkdir -p OWASP-report
