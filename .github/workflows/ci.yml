@@ -27,8 +27,8 @@ jobs:
 
       - name: Install OWASP Dependency-Check
         run: |
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
-          unzip dependency-check-12.1.0-release.zip
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.2.2/dependency-check-12.2.2-release.zip
+          unzip dependency-check-12.2.2-release.zip
 
       - name: Install Docker Compose
         run: |
@@ -57,6 +57,7 @@ jobs:
           ./dependency-check/bin/dependency-check.sh \
             --project "mylab" \
             --scan app/ \
+            --noupdate \
             --format "ALL" \
             --out OWASP-report \
             --nvdApiKey ${{ secrets.NVD_API_KEY }}
