@@ -53,13 +53,13 @@ jobs:
 
       - name: Run OWASP Dependency-Check
         run: |
-          mkdir -p reports
+          mkdir -p OWASP-report
           ./dependency-check/bin/dependency-check.sh \
             --project "mylab" \
             --scan app/ \
             --format "ALL" \
-            --out reports
-            --nvdApiKey ${{ '7BAC3FAF-09A1-F011-8362-0EBF96DE670D' }}
+            --out OWASP-report \
+            --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
       - name: Run tests
         run: |
