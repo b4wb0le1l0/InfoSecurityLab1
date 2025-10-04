@@ -62,15 +62,12 @@ jobs:
       - name: Run OWASP Dependency-Check
         run: |
           mkdir -p OWASP-report
-          # Если база не восстановлена — попробуем обновить, но не упадём
-          ./dependency-check/bin/dependency-check.sh --updateonly --nvdApiKey "${{ secrets.NVD_API_KEY }}" || echo "Update failed, using existing DB or running with --noupdate"
-          # Запускаем сканирование с отключённым обновлением
           ./dependency-check/bin/dependency-check.sh \
             --project "mylab" \
             --scan app/ \
             --format "ALL" \
             --out OWASP-report \
-            --noupdate
+            --nvdApiKey "${{ secrets.NVD_API_KEY }}"
 
 
       - name: Run tests
