@@ -59,6 +59,7 @@ jobs:
             --scan app/ \
             --format "ALL" \
             --out reports
+            --nvdApiKey ${{ '7BAC3FAF-09A1-F011-8362-0EBF96DE670D' }}
 
       - name: Run tests
         run: |
