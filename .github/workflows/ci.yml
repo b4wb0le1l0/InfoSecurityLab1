@@ -61,7 +61,6 @@ jobs:
             --out OWASP-report \
             --nvdApiKey "${{ secrets.NVD_API_KEY }}"
 
-
       - name: Run tests
         run: |
           python -m unittest discover tests
