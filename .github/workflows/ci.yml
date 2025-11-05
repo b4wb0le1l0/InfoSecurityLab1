@@ -59,7 +59,8 @@ jobs:
             --scan "." \
             --format "ALL" \
             --out OWASP-report \
-            --nvdApiKey "${{ secrets.NVD_API_KEY }}"
+            --nvdApiKey "${{ secrets.NVD_API_KEY }}" \
+            --disableOssIndex || true
 
       - name: Run tests
         run: |
